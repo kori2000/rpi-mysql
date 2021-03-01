@@ -1,0 +1,35 @@
+version: '3'
+services:
+
+    mysql:
+        container_name: mysql
+        restart: always
+        image: hypriot/rpi-mysql:latest
+        volumes:
+            - './mysql/data:/var/lib/mysql'
+        env_file:
+            - env/mysql.env
+        ports:
+            - 3306:3306
+        networks:
+            - mysql-network
+
+    phpmyadmin:
+        depends_on:
+            - mysql
+        container_name: phpmyadmin
+        restart: always
+        image: phpmyadmin:latest        
+        env_file:
+            - env/mysql.env
+        ports:
+            - 5560:80
+        networks:
+            - mysql-network       
+
+volumes:
+    mysql: null
+
+networks:
+    mysql-network:
+        driver: bridge
